@@ -16,11 +16,14 @@ gem 'twitter-bootstrap-rails'
 gem 'font-awesome-rails'
 gem 'russian'
 
+gem 'pry'
+
 group :development, :test do
   gem 'sqlite3', '~> 1.3.13'
   gem 'byebug'
   gem 'rspec-rails', '~> 3.4'
   gem 'factory_bot_rails'
+  gem 'factory_trace'
   gem 'shoulda-matchers'
 
   gem 'capybara'

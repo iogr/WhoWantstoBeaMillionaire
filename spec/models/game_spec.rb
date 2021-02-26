@@ -3,6 +3,20 @@
 require 'rails_helper'
 require 'support/my_spec_helper' # наш собственный класс с вспомогательными методами
 
+# FactoryBot.define do
+#   factory :user do
+#     finished_at { 1 }
+#   end
+# end
+#
+# factory :bar do
+#   trait :with_foos do; FactoryGirl.create_list :foo, 2; end
+# end
+#
+# factory :foo do
+#   bar
+# end
+
 # Тестовый сценарий для модели Игры
 # В идеале - все методы должны быть покрыты тестами,
 # в этом классе содержится ключевая логика игры и значит работы сайта.
@@ -11,6 +25,7 @@ RSpec.describe Game, type: :model do
   let(:user) { FactoryBot.create(:user) }
 
   # игра с прописанными игровыми вопросами
+  # pry.binding
   let(:game_w_questions) { FactoryBot.create(:game_with_questions, user: user) }
 
   # Группа тестов на работу фабрики создания новых игр
@@ -21,6 +36,7 @@ RSpec.describe Game, type: :model do
       generate_questions(60)
 
       game = nil
+
       # создaли игру, обернули в блок, на который накладываем проверки
       expect {
         game = Game.create_game_for_user!(user)
@@ -41,7 +57,6 @@ RSpec.describe Game, type: :model do
 
   # тесты на основную игровую логику
   context 'game mechanics' do
-
     # правильный ответ должен продолжать игру
     it 'answer correct continues game' do
       # текущий уровень игры и статус
@@ -59,6 +74,52 @@ RSpec.describe Game, type: :model do
       # игра продолжается
       expect(game_w_questions.status).to eq(:in_progress)
       expect(game_w_questions.finished?).to be_falsey
+    end
+
+    it 'take_money! finishes the game' do
+      # Берем игру и отвечаем на текущий вопрос
+      q = game_w_questions.current_game_question
+      game_w_questions.answer_current_question!(q.correct_answer_key)
+
+      # Взяли деньги
+      game_w_questions.take_money!
+
+      prize = game_w_questions.prize
+      expect(prize).to be > 0
+
+      # Проверяем, что закончилась игра и пришли деньги игроку
+      expect(game_w_questions.status).to eq :money
+      expect(game_w_questions.finished?).to be_truthy
+      expect(user.balance).to eq prize
+    end
+  end
+
+  # группа тестов на проверку статуса игры
+  context '.status' do
+    # перед каждым тестом "завершаем игру"
+    before(:each) do
+      game_w_questions.finished_at = Time.now
+      expect(game_w_questions.finished?).to be_truthy
+    end
+
+    it ':won' do
+      game_w_questions.current_level = Question::QUESTION_LEVELS.max + 1
+      expect(game_w_questions.status).to eq(:won)
+    end
+
+    it ':fail' do
+      game_w_questions.is_failed = true
+      expect(game_w_questions.status).to eq(:fail)
+    end
+
+    it ':timeout' do
+      game_w_questions.created_at = 1.hour.ago
+      game_w_questions.is_failed = true
+      expect(game_w_questions.status).to eq(:timeout)
+    end
+
+    it ':money' do
+      expect(game_w_questions.status).to eq(:money)
     end
   end
 end
