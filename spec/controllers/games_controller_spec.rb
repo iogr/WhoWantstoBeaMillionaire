@@ -10,6 +10,7 @@ require 'support/my_spec_helper' # наш собственный класс с �
 #   3. на передачу граничных/неправильных данных в попытке сломать контроллер
 #
 RSpec.describe GamesController, type: :controller do
+
   # обычный пользователь
   let(:user) { FactoryBot.create(:user) }
   # админ
@@ -77,7 +78,7 @@ RSpec.describe GamesController, type: :controller do
     it 'answers correct' do
       # передаем параметр params[:letter]
       put :answer, id: game_w_questions.id, letter: game_w_questions.current_game_question.correct_answer_key
-      game = assigns(:game)
+      game = assigns (:game)
 
       expect(game.finished?).to be_falsey
       expect(game.current_level).to be > 0
@@ -101,6 +102,22 @@ RSpec.describe GamesController, type: :controller do
       expect(game.current_game_question.help_hash[:audience_help]).to be
       expect(game.current_game_question.help_hash[:audience_help].keys).to contain_exactly('a', 'b', 'c', 'd')
       expect(response).to redirect_to(game_path(game))
+    end
+
+    # тест, пользователь берет деньги до конца игры
+    it 'uses audience take_money' do
+
+      game_w_questions.update_attribute(:current_level, 1)
+
+      # put :help, id: game_w_questions.id, help_type: :audience_help
+      put :take_money, id: game_w_questions.id
+      game = assigns(:game)
+
+      expect(game.finished?).to be_truthy
+      expect(game.prize).to be == 100
+
+      expect(response).to redirect_to(user_path(user))
+      expect(flash[:warning]).to be
     end
   end
 end
