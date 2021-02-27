@@ -21,13 +21,47 @@ RSpec.describe GamesController, type: :controller do
   # группа тестов для незалогиненного юзера (Анонимус)
   context 'Anonymous' do
     # из экшена show анона посылаем
-    it 'kick from #show' do
-      # вызываем экшен
+    it '#show kick from' do
       get :show, id: game_w_questions.id
       # проверяем ответ
       expect(response.status).not_to eq(200) # статус не 200 ОК
       expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
       expect(flash[:alert]).to be # во flash должен быть прописана ошибка
+    end
+
+    # аноним не может вызывать действие show у GamesController
+    # game GET    /games/:id(.:format)            games#show
+    it '#show get games without registration' do
+      get :show, id: game_w_questions.id
+
+      # expect(response.status).to eq(200)
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to eq 'Вам необходимо войти в систему или зарегистрироваться.'
+    end
+
+    # аноним не может создавать действие create у GamesController
+    # games POST   /games(.:format)                games#create
+    it '#create post games without registration' do
+      post :create
+
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to eq 'Вам необходимо войти в систему или зарегистрироваться.'
+    end
+
+    # answer_game PUT    /games/:id/answer(.:format)     games#answer
+    it '#answer put games without registration' do
+      put :answer, id: game_w_questions.id
+
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to eq 'Вам необходимо войти в систему или зарегистрироваться.'
+    end
+
+    # take_money_game PUT    /games/:id/take_money(.:format) games#take_money
+    it '#take_money put games without registration' do
+      put :take_money, id: game_w_questions.id
+
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to eq 'Вам необходимо войти в систему или зарегистрироваться.'
     end
   end
 
