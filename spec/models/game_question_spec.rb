@@ -50,6 +50,7 @@ RSpec.describe GameQuestion, type: :model do
       # проверяем новые значение хэша
       expect(gq.help_hash).to eq({some_key1: 'one two', 'some_key2' => 'three four'})
     end
+
     # проверяем работу 50/50
     it 'correct fifty_fifty' do
       # сначала убедимся, в подсказках пока нет нужного ключа
@@ -110,6 +111,7 @@ RSpec.describe GameQuestion, type: :model do
       expect(ff.size).to eq 2 # всего должно остаться 2 варианта
     end
 
+    # проверка работы подсказки звонок другу
     it 'correct friend_call' do
       expect(game_question.help_hash).not_to include(:friend_call)
       game_question.add_friend_call
