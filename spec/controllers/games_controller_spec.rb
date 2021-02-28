@@ -138,8 +138,10 @@ RSpec.describe GamesController, type: :controller do
 
     # юзер неправильно отвечает на игру - игра заканчивается
     it 'answers wrong' do
-      # put :answer, id: game_w_questions.id, params: { letter: 'x' }
-      put :answer, id: game_w_questions.id, params: { letter: 'a' }
+      wrong_answer = (['a', 'b', 'c', 'd'] - [game_w_questions.current_game_question.correct_answer_key]).sample
+      game_w_questions.update_attribute(:current_level, 0)
+
+      put :answer, id: game_w_questions.id, letter: wrong_answer
       game = assigns (:game)
 
       expect(game.finished?).to be_truthy
