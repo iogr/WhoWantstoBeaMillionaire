@@ -25,7 +25,6 @@ RSpec.describe Game, type: :model do
   let(:user) { FactoryBot.create(:user) }
 
   # игра с прописанными игровыми вопросами
-  # pry.binding
   let(:game_w_questions) { FactoryBot.create(:game_with_questions, user: user) }
 
   # Группа тестов на работу фабрики создания новых игр

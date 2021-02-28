@@ -63,7 +63,7 @@ class Game < ActiveRecord::Base
   end
 
   # текущий, еще неотвеченный вопрос игры
-  def current_game_questio  n
+  def current_game_question
     game_questions.detect { |q| q.question.level == current_level }
   end
 

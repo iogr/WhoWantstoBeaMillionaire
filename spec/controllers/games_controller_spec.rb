@@ -174,7 +174,6 @@ RSpec.describe GamesController, type: :controller do
 
       game_w_questions.update_attribute(:current_level, 1)
 
-      # put :help, id: game_w_questions.id, help_type: :audience_help
       put :take_money, id: game_w_questions.id
       game = assigns(:game)
 
