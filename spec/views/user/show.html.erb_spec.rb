@@ -34,7 +34,7 @@ RSpec.describe 'users/show', type: :view do
 
     it 'checks that other users cant see text and link to change pass' do
       expect(rendered).not_to match 'Сменить имя и пароль'
-      expect(rendered).not_to have_link('Сменить имя и пароль', href: "/users/edit.#{user.id}")
+      expect(rendered).not_to have_link('Сменить имя и пароль', href: "")
     end
   end
 
