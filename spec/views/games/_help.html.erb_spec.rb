@@ -24,7 +24,7 @@ RSpec.describe 'games/help', type: :view do
     expect(rendered).to match 'Сережа считает, что это вариант D'
   end
 
-  # Проверяем, что если была использована подсказка 50/50, то соотв. кнопка не выводится
+  # Проверяем, что если была использована подсказка 50/50, то соотв. кнопка не выводится ·
   it 'does not render used help variant' do
     game.fifty_fifty_used = true
 

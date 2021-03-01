@@ -141,7 +141,7 @@ RSpec.describe GamesController, type: :controller do
       wrong_answer = (['a', 'b', 'c', 'd'] - [game_w_questions.current_game_question.correct_answer_key]).sample
 
       put :answer, id: game_w_questions.id, letter: wrong_answer
-      game = assigns (:game)
+      game = assigns(:game)
 
       expect(game.finished?).to be_truthy
 
@@ -149,6 +149,25 @@ RSpec.describe GamesController, type: :controller do
       expect(response).to redirect_to(user_path(user))
       expect(response.status).to be
       expect(flash[:alert]).to be
+    end
+
+    # тест на отработку "50/50"
+    it 'uses fifty_fifty_help' do
+      # сперва проверяем что в подсказках текущего вопроса пусто
+      expect(game_w_questions.current_game_question.help_hash[:fifty_fifty]).not_to be
+      expect(game_w_questions.fifty_fifty_used).to be false
+
+      # фигачим запрос в контроллен с нужным типом
+      put :help, id: game_w_questions.id, help_type: :fifty_fifty
+      game = assigns(:game)
+
+      # проверяем, что игра не закончилась, что флажок установился, и подсказка записалась
+      expect(game.finished?).to be false
+      expect(game.fifty_fifty_used).to be true
+      expect(game.current_game_question.help_hash[:fifty_fifty]).to be_an Array
+      expect(game.current_game_question.help_hash[:fifty_fifty].size).to eq(2)
+      expect(game.current_game_question.help_hash[:fifty_fifty]).to include('d')
+      expect(response).to redirect_to(game_path(game))
     end
 
     # тест на отработку "помощи зала"
