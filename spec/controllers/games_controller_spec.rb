@@ -153,7 +153,7 @@ RSpec.describe GamesController, type: :controller do
 
     # тест на отработку "50/50"
     it 'uses fifty_fifty_help' do
-      right_answer = ([game_w_questions.current_game_question.correct_answer_key]).sample
+      right_answer = [game_w_questions.current_game_question.correct_answer_key].sample
       # сперва проверяем что в подсказках текущего вопроса пусто
       expect(game_w_questions.current_game_question.help_hash[:fifty_fifty]).not_to be
       expect(game_w_questions.fifty_fifty_used).to be false
