@@ -8,9 +8,7 @@ require 'support/my_spec_helper' # наш собственный класс с �
 #   1. на авторизацию (чтобы к чужим юзерам не утекли не их данные)
 #   2. на четкое выполнение самых важных сценариев (требований) приложения
 #   3. на передачу граничных/неправильных данных в попытке сломать контроллер
-#
 RSpec.describe GamesController, type: :controller do
-
   # обычный пользователь
   let(:user) { FactoryBot.create(:user) }
   # админ
@@ -23,6 +21,7 @@ RSpec.describe GamesController, type: :controller do
     # из экшена show анона посылаем
     it '#show kick from' do
       get :show, id: game_w_questions.id
+
       # проверяем ответ
       expect(response.status).not_to eq(200) # статус не 200 ОК
       expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
@@ -81,6 +80,7 @@ RSpec.describe GamesController, type: :controller do
       # проверяем состояние этой игры
       expect(game.finished?).to be false
       expect(game.user).to eq(user)
+
       # и редирект на страницу этой игры
       expect(response).to redirect_to(game_path(game))
       expect(flash[:notice]).to be
@@ -90,7 +90,6 @@ RSpec.describe GamesController, type: :controller do
     it 'user creates second game' do
       # убедились что есть игра в работе
       expect(game_w_questions.finished?).to be false
-
       # отправляем запрос на создание, убеждаемся что новых Game не создалось
       expect { post :create }.to change(Game, :count).by(0)
 
@@ -106,6 +105,7 @@ RSpec.describe GamesController, type: :controller do
     it '#show game' do
       get :show, id: game_w_questions.id
       game = assigns(:game) # вытаскиваем из контроллера поле @game
+
       expect(game.finished?).to be false
       expect(game.user).to eq(user)
 
@@ -126,8 +126,10 @@ RSpec.describe GamesController, type: :controller do
 
     # юзер отвечает на игру корректно - игра продолжается
     it 'answers correct' do
-      # передаем параметр params[:letter]
-      put :answer, id: game_w_questions.id, letter: game_w_questions.current_game_question.correct_answer_key
+      right_answer = game_w_questions.current_game_question.correct_answer_key
+
+      put :answer, id: game_w_questions.id, letter: right_answer
+
       game = assigns (:game)
 
       expect(game.finished?).to be false
@@ -138,7 +140,8 @@ RSpec.describe GamesController, type: :controller do
 
     # юзер неправильно отвечает на игру - игра заканчивается
     it 'answers wrong' do
-      wrong_answer = (['a', 'b', 'c', 'd'] - [game_w_questions.current_game_question.correct_answer_key]).sample
+      right_answer = game_w_questions.current_game_question.correct_answer_key
+      wrong_answer = (['a', 'b', 'c', 'd'] - [right_answer]).sample
 
       put :answer, id: game_w_questions.id, letter: wrong_answer
       game = assigns(:game)
@@ -153,7 +156,8 @@ RSpec.describe GamesController, type: :controller do
 
     # тест на отработку "50/50"
     it 'uses fifty_fifty_help' do
-      right_answer = [game_w_questions.current_game_question.correct_answer_key].sample
+      right_answer = game_w_questions.current_game_question.correct_answer_key
+
       # сперва проверяем что в подсказках текущего вопроса пусто
       expect(game_w_questions.current_game_question.help_hash[:fifty_fifty]).not_to be
       expect(game_w_questions.fifty_fifty_used).to be false
@@ -191,7 +195,6 @@ RSpec.describe GamesController, type: :controller do
 
     # тест, пользователь берет деньги до конца игры
     it 'uses audience take_money' do
-
       game_w_questions.update_attribute(:current_level, 1)
 
       put :take_money, id: game_w_questions.id
