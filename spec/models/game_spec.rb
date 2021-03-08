@@ -3,20 +3,6 @@
 require 'rails_helper'
 require 'support/my_spec_helper' # наш собственный класс с вспомогательными методами
 
-# FactoryBot.define do
-#   factory :user do
-#     finished_at { 1 }
-#   end
-# end
-#
-# factory :bar do
-#   trait :with_foos do; FactoryGirl.create_list :foo, 2; end
-# end
-#
-# factory :foo do
-#   bar
-# end
-
 # Тестовый сценарий для модели Игры
 # В идеале - все методы должны быть покрыты тестами,
 # в этом классе содержится ключевая логика игры и значит работы сайта.
@@ -69,6 +55,7 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.current_level).to eq(level + 1)
       # ранее текущий вопрос стал предыдущим
       expect(game_w_questions.previous_game_question).to eq(q)
+      # V
       expect(game_w_questions.current_game_question).not_to eq(q)
       # игра продолжается
       expect(game_w_questions.status).to eq(:in_progress)
@@ -119,6 +106,14 @@ RSpec.describe Game, type: :model do
 
     it ':money' do
       expect(game_w_questions.status).to eq(:money)
+    end
+
+    it '.previous_level' do
+      expect(game_w_questions.previous_level).to eq(-1)
+    end
+
+    it '.current_game_question' do
+      expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions.first)
     end
   end
 end
