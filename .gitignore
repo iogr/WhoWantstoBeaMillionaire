@@ -38,7 +38,7 @@ yarn-debug.log*
 .byebug_history
 
 # Ignore all credentials
-config/database.yml
+#config/database.yml
 config/secrets.yml
 .env
 sendgrid.env
