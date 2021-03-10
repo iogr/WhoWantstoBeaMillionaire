@@ -1,5 +1,4 @@
 #  (c) goodprogrammer.ru
-#
 
 require 'game_help_generator'
 
@@ -34,7 +33,6 @@ class GameQuestion < ActiveRecord::Base
   #   friend_call: 'Василий Петрович считает, что правильный ответ A'
   # }
   #
-
 
   # ----- Основные методы для доступа к данным в шаблонах и контроллерах -----------
 

@@ -1,6 +1,6 @@
 #  (c) goodprogrammer.ru
 #
-# Модельи игры — создается когда пользователь начинает новую игру
+# Модель игры — создается когда пользователь начинает новую игру
 # Хранит/обновляет состояние игры и отвечает за игровой процесс.
 class Game < ActiveRecord::Base
 
@@ -135,6 +135,7 @@ class Game < ActiveRecord::Base
   # false если подсказка уже заюзана.
   #
   # help_type = :fifty_fifty | :audience_help | :friend_call
+
   def use_help(help_type)
     case help_type
     when :fifty_fifty

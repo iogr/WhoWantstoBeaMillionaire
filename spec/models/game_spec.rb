@@ -40,11 +40,11 @@ RSpec.describe Game, type: :model do
   end
 
   context 'game logic' do
-    it '.previous_level' do
+    it 'correct .previous_level' do
       expect(game_w_questions.previous_level).to eq(-1)
     end
 
-    it '.current_game_question' do
+    it 'correct .current_game_question' do
       expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions.first)
     end
   end
