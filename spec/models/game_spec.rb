@@ -48,6 +48,7 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions.first)
     end
   end
+
   # тесты на основную игровую логику
   context 'game mechanics' do
     # правильный ответ должен продолжать игру

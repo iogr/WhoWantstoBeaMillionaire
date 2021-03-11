@@ -20,7 +20,7 @@
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= number_to_currency user.balance %></td>
         <td><%= user.games.count %></td>
-        <td><%= user.average_prize %></td>
+        <td><%= user.average_prize || "в процессе" %></td>
       </tr>
     <% end %>
   </table>
