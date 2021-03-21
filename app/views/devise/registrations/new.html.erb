@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="col-lg-6 padding-both">
-      <h2><%= t('.sign_up', :default => 'Sign up') %></h2>
+      <h3><%= t('.sign_up', :default => 'Sign up') %></h3>
 
       <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
         <%= devise_error_messages! %>
@@ -18,7 +18,7 @@
         <div><%= f.label :password_confirmation %><br/>
           <%= f.password_field :password_confirmation %></div>
 
-        <div class="btn-defaul buffer-both"><%= f.submit t('.sign_up', :default => 'Sign up') %></div>
+        <div class="btn-default buffer-both"><%= f.submit t('.sign_up', :default => 'Sign up') %></div>
       <% end %>
 
       <%= render 'devise/shared/links' %>
