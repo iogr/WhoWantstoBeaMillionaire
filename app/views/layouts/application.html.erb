@@ -51,7 +51,6 @@
           <%= link_to 'Залить новые вопросы', new_questions_path, class: 'btn navbar-btn btn-warning btn-xs' %>
         <% end %>
 
-
         <%= link_to content_tag(:span, "#{current_user.name} - #{number_to_currency current_user.balance}"),
                     user_path(current_user),
                     class: 'btn navbar-btn'
